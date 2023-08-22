@@ -203,7 +203,7 @@ class PotentialTrainer:
             callback_list.on_epoch_begin(epoch=epoch, logs={"epoch": epoch})
             epoch_loss_avg = tf.keras.metrics.Mean()
             emae_avg = tf.keras.metrics.Mean()
-            fmae_avg = tf.keras.metrics.Mean()
+            # fmae_avg = tf.keras.metrics.Mean()
             smae_avg = tf.keras.metrics.Mean()
             for batch_index, batch in enumerate(mgb):
                 callback_list.on_batch_begin(batch=batch_index)
@@ -215,12 +215,12 @@ class PotentialTrainer:
                 self.optimizer.apply_gradients(zip(grads, self.potential.trainable_variables))
                 epoch_loss_avg.update_state(lossval)
                 emae_avg.update_state(emae)
-                fmae_avg.update_state(fmae)
+                # fmae_avg.update_state(fmae)
                 smae_avg.update_state(smae)
                 logs = {
                     "loss": epoch_loss_avg.result().numpy(),
                     "MAE(E)": emae_avg.result().numpy(),
-                    "MAE(F)": fmae_avg.result().numpy(),
+                    # "MAE(F)": fmae_avg.result().numpy(),
                     "MAE(S)": smae_avg.result().numpy(),
                 }
                 callback_list.on_batch_end(batch=batch_index, logs=logs)
@@ -228,13 +228,13 @@ class PotentialTrainer:
             epoch_logs = {
                 "loss": epoch_loss_avg.result().numpy(),
                 "MAE(E)": emae_avg.result().numpy(),
-                "MAE(F)": fmae_avg.result().numpy(),
+                # "MAE(F)": fmae_avg.result().numpy(),
                 "MAE(S)": smae_avg.result().numpy(),
             }
 
             epoch_loss_avg = tf.keras.metrics.Mean()
             emae_avg = tf.keras.metrics.Mean()
-            fmae_avg = tf.keras.metrics.Mean()
+            # fmae_avg = tf.keras.metrics.Mean()
             smae_avg = tf.keras.metrics.Mean()
 
             for batch_index, batch in enumerate(mgb_val):
@@ -246,7 +246,7 @@ class PotentialTrainer:
                 )
                 epoch_loss_avg.update_state(lossval)
                 emae_avg.update_state(emae)
-                fmae_avg.update_state(fmae)
+                # fmae_avg.update_state(fmae)
                 smae_avg.update_state(smae)
 
             epoch_logs.update(
@@ -254,7 +254,7 @@ class PotentialTrainer:
                     "val_MAE": emae_avg.result().numpy()
                     + stress_loss_ratio * smae_avg.result().numpy(),
                     "val_MAE(E)": emae_avg.result().numpy(),
-                    "val_MAE(F)": fmae_avg.result().numpy(),
+                    # "val_MAE(F)": fmae_avg.result().numpy(),
                     "val_MAE(S)": smae_avg.result().numpy(),
                     
                     # "val_MAE": emae_avg.result().numpy()
