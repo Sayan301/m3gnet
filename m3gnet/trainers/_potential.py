@@ -139,7 +139,7 @@ class PotentialTrainer:
             e_loss = _flat_loss(e_target, e_pred)
             # f_loss = _flat_loss(target_batch[1], graph_pred_batch[1])
             e_metric = _mae(e_target, e_pred)
-            f_metric = _mae(target_batch[1], graph_pred_batch[1])
+            # f_metric = _mae(target_batch[1], graph_pred_batch[1])
 
             s_loss = 0
             s_metric = 0
@@ -150,7 +150,7 @@ class PotentialTrainer:
                 # e_loss + force_loss_ratio * f_loss + stress_loss_ratio * s_loss,
                 e_loss + stress_loss_ratio * s_loss,
                 e_metric,
-                f_metric,
+                # f_metric,
                 s_metric,
             )
 
