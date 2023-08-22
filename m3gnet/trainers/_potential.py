@@ -137,7 +137,7 @@ class PotentialTrainer:
             e_target = e_target[:, None]
             e_pred = graph_pred_batch[0] / n_atoms_temp[:, None]
             e_loss = _flat_loss(e_target, e_pred)
-            f_loss = _flat_loss(target_batch[1], graph_pred_batch[1])
+            # f_loss = _flat_loss(target_batch[1], graph_pred_batch[1])
             e_metric = _mae(e_target, e_pred)
             f_metric = _mae(target_batch[1], graph_pred_batch[1])
 
@@ -147,7 +147,8 @@ class PotentialTrainer:
                 s_loss = _flat_loss(target_batch[2], graph_pred_batch[2])
                 s_metric = _mae(target_batch[2], graph_pred_batch[2])
             return (
-                e_loss + force_loss_ratio * f_loss + stress_loss_ratio * s_loss,
+                # e_loss + force_loss_ratio * f_loss + stress_loss_ratio * s_loss,
+                e_loss + stress_loss_ratio * s_loss,
                 e_metric,
                 f_metric,
                 s_metric,
@@ -251,11 +252,17 @@ class PotentialTrainer:
             epoch_logs.update(
                 **{
                     "val_MAE": emae_avg.result().numpy()
-                    + force_loss_ratio * fmae_avg.result().numpy()
                     + stress_loss_ratio * smae_avg.result().numpy(),
                     "val_MAE(E)": emae_avg.result().numpy(),
                     "val_MAE(F)": fmae_avg.result().numpy(),
                     "val_MAE(S)": smae_avg.result().numpy(),
+                    
+                    # "val_MAE": emae_avg.result().numpy()
+                    # + force_loss_ratio * fmae_avg.result().numpy()
+                    # + stress_loss_ratio * smae_avg.result().numpy(),
+                    # "val_MAE(E)": emae_avg.result().numpy(),
+                    # "val_MAE(F)": fmae_avg.result().numpy(),
+                    # "val_MAE(S)": smae_avg.result().numpy(),
                 }
             )
 
