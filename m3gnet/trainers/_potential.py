@@ -190,14 +190,18 @@ class PotentialTrainer:
         def train_one_step(potential, graph_list, target_list):
             with tf.GradientTape() as tape:
                 pred_list = potential.get_efs_tensor(graph_list, include_stresses=has_stress)
-                loss_val, emae, fmae, smae = _loss(target_list, pred_list, graph_list[Index.N_ATOMS])
+                # loss_val, emae, fmae, smae = _loss(target_list, pred_list, graph_list[Index.N_ATOMS])
+                loss_val, emae, smae = _loss(target_list, pred_list, graph_list[Index.N_ATOMS])
+            
             if "macOS" in PLATFORM and "arm64" in PLATFORM and tf.config.list_physical_devices("GPU"):
                 # This is a workaround for a bug in tensorflow-metal that fails when tape.gradient is called.
                 with tf.device("/cpu:0"):
                     grads = tape.gradient(loss_val, potential.model.trainable_variables)
             else:
                 grads = tape.gradient(loss_val, potential.model.trainable_variables)
-            return loss_val, grads, pred_list, emae, fmae, smae
+            # return loss_val, grads, pred_list, emae, fmae, smae
+            return loss_val, grads, pred_list, emae, smae
+        
 
         for epoch in range(epochs):
             callback_list.on_epoch_begin(epoch=epoch, logs={"epoch": epoch})
@@ -208,7 +212,10 @@ class PotentialTrainer:
             for batch_index, batch in enumerate(mgb):
                 callback_list.on_batch_begin(batch=batch_index)
                 graph_batch, target_batch = batch
-                lossval, grads, pred_list, emae, fmae, smae = train_one_step(
+                # lossval, grads, pred_list, emae, fmae, smae = train_one_step(
+                #     self.potential, graph_batch.as_tf().as_list(), target_batch
+                # )
+                lossval, grads, pred_list, emae, smae = train_one_step(
                     self.potential, graph_batch.as_tf().as_list(), target_batch
                 )
 
