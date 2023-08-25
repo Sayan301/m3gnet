@@ -246,7 +246,12 @@ class PotentialTrainer:
 
             for batch_index, batch in enumerate(mgb_val):
                 graph_batch, target_batch = batch
-                lossval, emae, fmae, smae = _loss(
+                # lossval, emae, fmae, smae = _loss(
+                #     target_batch,
+                #     self.potential.get_efs_tensor(graph_batch.as_tf().as_list(), has_stress),
+                #     graph_batch.n_atoms,
+                # )
+                lossval, emae, smae = _loss(
                     target_batch,
                     self.potential.get_efs_tensor(graph_batch.as_tf().as_list(), has_stress),
                     graph_batch.n_atoms,
