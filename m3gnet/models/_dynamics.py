@@ -87,7 +87,7 @@ class M3GNetCalculator(Calculator):
         self.results.update(
             energy=results[0].numpy().ravel()[0],
             free_energy=results[0].numpy().ravel()[0],
-            forces=results[1].numpy(),
+            # forces=results[1].numpy(),
         )
         if self.compute_stress:
             self.results.update(stress=results[2].numpy()[0] * self.stress_weight)
@@ -192,7 +192,7 @@ class TrajectoryObserver:
         """
         self.atoms = atoms
         self.energies: list[float] = []
-        self.forces: list[np.ndarray] = []
+        # self.forces: list[np.ndarray] = []
         self.stresses: list[np.ndarray] = []
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
@@ -203,7 +203,7 @@ class TrajectoryObserver:
         Returns:
         """
         self.energies.append(self.compute_energy())
-        self.forces.append(self.atoms.get_forces())
+        # self.forces.append(self.atoms.get_forces())
         self.stresses.append(self.atoms.get_stress())
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
@@ -227,7 +227,7 @@ class TrajectoryObserver:
             pickle.dump(
                 {
                     "energy": self.energies,
-                    "forces": self.forces,
+                    # "forces": self.forces,
                     "stresses": self.stresses,
                     "atom_positions": self.atom_positions,
                     "cell": self.cells,
