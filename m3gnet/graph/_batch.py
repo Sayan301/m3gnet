@@ -100,9 +100,10 @@ class MaterialGraphBatchEnergyForceStress(MaterialGraphBatch):
     def __getitem__(self, index):
         graph_indices = self.graph_index[index * self.batch_size : (index + 1) * self.batch_size]
         graphs, energies = super().__getitem__(index)
-        forces = np.concatenate([self.forces[i] for i in graph_indices], axis=0)
-        forces = np.array(forces, dtype="float32")
-        return_values = [graphs, (energies, forces)]
+        # forces = np.concatenate([self.forces[i] for i in graph_indices], axis=0)
+        # forces = np.array(forces, dtype="float32")
+        # return_values = [graphs, (energies, forces)]
+        return_values = [graphs, (energies)]
         if self.stresses is not None:
             stresses = np.array([self.stresses[i] for i in graph_indices])
             return_values[1] += (stresses,)
