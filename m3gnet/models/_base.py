@@ -185,14 +185,14 @@ class BasePotential(tf.keras.Model, ABC):
                 volume = tf.linalg.det(graph[Index.LATTICES])
             energies = self.get_energies(graph)
             # derivatives = {"forces": graph[Index.ATOM_POSITIONS]}
-            if include_stresses:
-                derivatives["stresses"] = strain  # type: ignore
-            if "macOS" in PLATFORM and "arm64" in PLATFORM and tf.config.list_physical_devices("GPU"):
-                # This is a workaround for a bug in tensorflow-metal that fails when tape.gradient is called.
-                with tf.device("/cpu:0"):
-                    derivatives = tape.gradient(energies, derivatives)
-            else:
-                derivatives = tape.gradient(energies, derivatives)
+            # if include_stresses:
+            #     derivatives["stresses"] = strain  # type: ignore
+            # if "macOS" in PLATFORM and "arm64" in PLATFORM and tf.config.list_physical_devices("GPU"):
+            #     # This is a workaround for a bug in tensorflow-metal that fails when tape.gradient is called.
+            #     with tf.device("/cpu:0"):
+            #         derivatives = tape.gradient(energies, derivatives)
+            # else:
+            #     derivatives = tape.gradient(energies, derivatives)
 
         # forces = -derivatives["forces"]
         # forces = tf.cast(tf.convert_to_tensor(forces), DataType.tf_float)
@@ -200,10 +200,10 @@ class BasePotential(tf.keras.Model, ABC):
         results: tuple = (energies)
         
         # eV/A^3 to GPa
-        if include_stresses:
-            stresses = 1 / volume[:, None, None] * derivatives["stresses"] * 160.21766208
-            stresses = tf.cast(tf.convert_to_tensor(stresses), DataType.tf_float)
-            results += (stresses,)
+        # if include_stresses:
+        #     stresses = 1 / volume[:, None, None] * derivatives["stresses"] * 160.21766208
+        #     stresses = tf.cast(tf.convert_to_tensor(stresses), DataType.tf_float)
+        #     results += (stresses,)
         return results
 
     def call(
