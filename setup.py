@@ -36,7 +36,8 @@ setup(
     long_description_content_type="text/markdown",
     author="Chi Chen",
     author_email="chen08013@gmail.com",
-    download_url="https://github.com/materialsvirtuallab/m3gnet",
+    # download_url="https://github.com/materialsvirtuallab/m3gnet",
+    download_url="https://github.com/Sayan301/m3gnet.git",
     license="BSD",
     extras_require={
         "model_saving": ["h5py"],
