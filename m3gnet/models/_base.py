@@ -184,7 +184,7 @@ class BasePotential(tf.keras.Model, ABC):
                 )
                 volume = tf.linalg.det(graph[Index.LATTICES])
             energies = self.get_energies(graph)
-            derivatives = {"forces": graph[Index.ATOM_POSITIONS]}
+            # derivatives = {"forces": graph[Index.ATOM_POSITIONS]}
             if include_stresses:
                 derivatives["stresses"] = strain  # type: ignore
             if "macOS" in PLATFORM and "arm64" in PLATFORM and tf.config.list_physical_devices("GPU"):
@@ -194,9 +194,11 @@ class BasePotential(tf.keras.Model, ABC):
             else:
                 derivatives = tape.gradient(energies, derivatives)
 
-        forces = -derivatives["forces"]
-        forces = tf.cast(tf.convert_to_tensor(forces), DataType.tf_float)
-        results: tuple = (energies, forces)
+        # forces = -derivatives["forces"]
+        # forces = tf.cast(tf.convert_to_tensor(forces), DataType.tf_float)
+        # results: tuple = (energies, forces)
+        results: tuple = (energies)
+        
         # eV/A^3 to GPa
         if include_stresses:
             stresses = 1 / volume[:, None, None] * derivatives["stresses"] * 160.21766208
@@ -207,7 +209,9 @@ class BasePotential(tf.keras.Model, ABC):
     def call(
         self,
         graph: Union[MaterialGraph, Structure, Molecule, List],
-        include_forces: bool = True,
+        # include_forces: bool = True,
+        include_forces: bool = False,
+        
         include_stresses: bool = True,
     ):
         """
@@ -223,8 +227,8 @@ class BasePotential(tf.keras.Model, ABC):
             graph = self.graph_converter.convert(graph)
         efs = self.get_efs(graph, include_stresses=include_stresses)
         results: tuple = (efs[0],)
-        if include_forces:
-            results += (efs[1],)
+        # if include_forces:
+        #     results += (efs[1],)
         if include_stresses:
             results += (efs[2],)
         if len(results) == 1:
